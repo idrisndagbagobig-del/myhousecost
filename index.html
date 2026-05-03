@@ -87,12 +87,19 @@
 
 <script>
 function calculateCost() {
-  const size = document.getElementById("size").value;
+  const size = parseFloat(document.getElementById("size").value);
   const type = document.getElementById("type").value;
   const location = document.getElementById("location").value;
 
-  if (!size) {
-    alert("Please enter size");
+  // Check input
+  if (!size || size <= 0) {
+    alert("Please enter a valid size");
+    return;
+  }
+
+  // Check data exists
+  if (!data || !data.buildingTypes || !data.locations) {
+    alert("Data not loaded. Check data.js file.");
     return;
   }
 
@@ -100,32 +107,38 @@ function calculateCost() {
   const multiplier = data.locations[location];
 
   if (!costPerSqm || !multiplier) {
-    alert("Data error — check your setup");
+    alert("Invalid selection");
     return;
   }
 
   const total = size * costPerSqm * multiplier;
 
-  // Show result
   document.getElementById("result").innerHTML = `
-  <h2>Estimated Project Cost</h2>
-  <p style="font-size: 24px; font-weight: bold;">
-    ₦${total.toLocaleString()}
-  </p>
-  <p style="color: gray;">
-    Detailed breakdown available after unlock
-  </p>
-`;
-<div id="fullReport" style="display:none; margin-top:20px;">
-  <h3>Full Cost Breakdown</h3>
-  <p>Foundation: ₦3,000,000</p>
-  <p>Walls & Structure: ₦4,500,000</p>
-  <p>Roofing: ₦2,500,000</p>
-  <p>Finishing: ₦4,000,000</p>
-</div>
+    <h2>Estimated Project Cost</h2>
+    <p style="font-size: 24px; font-weight: bold;">
+      ₦${total.toLocaleString()}
+    </p>
+    <p style="color: gray;">
+      Detailed breakdown available after unlock
+    </p>
+  `;
 
-  // Show unlock button
-  document.getElementById("unlockBtn").onclick = function () {
+  // Add dynamic breakdown (IMPORTANT UPGRADE)
+  document.getElementById("fullReport").innerHTML = `
+    <h3>Full Cost Breakdown</h3>
+    <p>Foundation: ₦${(total * 0.2).toLocaleString()}</p>
+    <p>Structure: ₦${(total * 0.3).toLocaleString()}</p>
+    <p>Roofing: ₦${(total * 0.15).toLocaleString()}</p>
+    <p>Finishing: ₦${(total * 0.25).toLocaleString()}</p>
+  `;
+
+  document.getElementById("unlockBtn").style.display = "block";
+  document.getElementById("fullReport").style.display = "none";
+}
+
+
+// Payment + redirect
+document.getElementById("unlockBtn").onclick = function () {
   fetch("https://myhousecost.onrender.com/pay", {
     method: "POST",
     headers: {
@@ -149,36 +162,6 @@ function calculateCost() {
     console.error(err);
     alert("Payment failed: " + err.message);
   });
-};
-
-  window.location.href = data.data.authorization_url;
-})
-.catch(err => {
-  console.error(err);
-  alert("Payment failed: " + err.message);
-});
-
-  const size = document.getElementById("size").value;
-  const type = document.getElementById("type").value;
-  const location = document.getElementById("location").value;
-
-  const costPerSqm = data.buildingTypes[type];
-  const multiplier = data.locations[location];
-  const total = size * costPerSqm * multiplier;
-
-  const foundation = total * 0.15;
-  const roofing = total * 0.2;
-  const finishing = total * 0.25;
-
-  document.getElementById("fullReport").style.display = "block";
-
-  document.getElementById("fullReport").innerHTML = `
-    <h3>Full Cost Breakdown</h3>
-    <p>Foundation: ₦${foundation.toLocaleString()}</p>
-    <p>Roofing: ₦${roofing.toLocaleString()}</p>
-    <p>Finishing: ₦${finishing.toLocaleString()}</p>
-    <p><strong>Total: ₦${total.toLocaleString()}</strong></p>
-  `;
 };
 </script>
 
