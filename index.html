@@ -48,7 +48,8 @@
 
 <div class="container">
   <h1>MyHouseCost</h1>
-
+<h1>Estimate Your Building Cost in Nigeria (Accurate 2026 Prices)</h1>
+<p>Get a detailed cost breakdown for your house project in seconds.</p>
   <input type="text" id="project" placeholder="Project Name">
 
   <select id="location">
@@ -71,11 +72,15 @@
   <div class="result" id="result"></div>
 
   <button id="unlockBtn" style="display:none; margin-top:10px;">
-    Unlock Full Report (₦1,000)
+    Unlock Full Building Cost Report (₦1,000)
   </button>
 
   <div id="fullReport" style="display:none; margin-top:20px; text-align:left;"></div>
 </div>
+
+<p>✔ Based on real Nigerian construction market data</p>
+<p>✔ Updated material prices</p>
+<p>✔ Trusted by builders & homeowners</p>
 
 <!-- Load your data -->
 <script src="data.js"></script>
@@ -102,36 +107,49 @@ function calculateCost() {
   const total = size * costPerSqm * multiplier;
 
   // Show result
-  document.getElementById("result").innerText =
-    "Estimated Cost: ₦" + total.toLocaleString();
+  document.getElementById("result").innerHTML = `
+  <h2>Estimated Project Cost</h2>
+  <p style="font-size: 24px; font-weight: bold;">
+    ₦${total.toLocaleString()}
+  </p>
+  <p style="color: gray;">
+    Detailed breakdown available after unlock
+  </p>
+`;
+<div id="fullReport" style="display:none; margin-top:20px;">
+  <h3>Full Cost Breakdown</h3>
+  <p>Foundation: ₦3,000,000</p>
+  <p>Walls & Structure: ₦4,500,000</p>
+  <p>Roofing: ₦2,500,000</p>
+  <p>Finishing: ₦4,000,000</p>
+</div>
 
   // Show unlock button
-  document.getElementById("unlockBtn").style.display = "block";
-
-  // Hide full report initially
-  document.getElementById("fullReport").style.display = "none";
-}
-
-// Unlock button logic
-document.getElementById("unlockBtn").onclick = function () {
+  document.getElementById("unlockBtn").onclick = function () {
   fetch("https://myhousecost.onrender.com/pay", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    email: "test@email.com",
-    amount: 1000
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      email: "test@email.com",
+      amount: 1000
+    })
   })
-})
-.then(res => res.json())
-.then(data => {
-  console.log("BACKEND RESPONSE:", data);
+  .then(res => res.json())
+  .then(data => {
+    if (!data.status || !data.data) {
+      alert("Payment error: " + JSON.stringify(data.message));
+      return;
+    }
 
-  if (!data.status || !data.data) {
-    alert("Payment error: " + JSON.stringify(data.message));
-    return;
-  }
+    window.location.href = data.data.authorization_url;
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Payment failed: " + err.message);
+  });
+};
 
   window.location.href = data.data.authorization_url;
 })
