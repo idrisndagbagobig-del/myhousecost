@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MyHouseCost App</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #22c55e;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #38bdf8;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>MyHouseCost</h1>
+
+  <input type="text" id="project" placeholder="Project Name">
+
+  <select id="location">
+    <option value="lagos">Lagos</option>
+    <option value="abuja">Abuja</option>
+    <option value="ibadan">Ibadan</option>
+    <option value="kano">Kano</option>
+  </select>
+
+  <select id="type">
+    <option value="basic">Basic</option>
+    <option value="standard">Standard</option>
+    <option value="luxury">Luxury</option>
+  </select>
+
+  <input type="number" id="size" placeholder="Size (sqm)">
+
+  <button onclick="calculateCost()">Calculate Cost</button>
+
+  <div class="result" id="result"></div>
+
+  <button id="unlockBtn" style="display:none; margin-top:10px;">
+    Unlock Full Report (₦1,000)
+  </button>
+
+  <div id="fullReport" style="display:none; margin-top:20px; text-align:left;"></div>
+</div>
+
+<!-- Load your data -->
+<script src="data.js"></script>
+
+<script>
+function calculateCost() {
+  const size = document.getElementById("size").value;
+  const type = document.getElementById("type").value;
+  const location = document.getElementById("location").value;
+
+  if (!size) {
+    alert("Please enter size");
+    return;
+  }
+
+  const costPerSqm = data.buildingTypes[type];
+  const multiplier = data.locations[location];
+
+  if (!costPerSqm || !multiplier) {
+    alert("Data error — check your setup");
+    return;
+  }
+
+  const total = size * costPerSqm * multiplier;
+
+  // Show result
+  document.getElementById("result").innerText =
+    "Estimated Cost: ₦" + total.toLocaleString();
+
+  // Show unlock button
+  document.getElementById("unlockBtn").style.display = "block";
+
+  // Hide full report initially
+  document.getElementById("fullReport").style.display = "none";
+}
+
+// Unlock button logic
+document.getElementById("unlockBtn").onclick = function () {
+  fetch("http://localhost:3000/pay", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    email: "test@email.com",
+    amount: 1000
+  })
+})
+.then(res => res.json())
+.then(data => {
+  console.log("BACKEND RESPONSE:", data);
+
+  if (!data.status || !data.data) {
+    alert("Payment error: " + JSON.stringify(data.message));
+    return;
+  }
+
+  window.location.href = data.data.authorization_url;
+})
+.catch(err => {
+  console.error(err);
+  alert("Payment failed: " + err.message);
+});
+
+  const size = document.getElementById("size").value;
+  const type = document.getElementById("type").value;
+  const location = document.getElementById("location").value;
+
+  const costPerSqm = data.buildingTypes[type];
+  const multiplier = data.locations[location];
+  const total = size * costPerSqm * multiplier;
+
+  const foundation = total * 0.15;
+  const roofing = total * 0.2;
+  const finishing = total * 0.25;
+
+  document.getElementById("fullReport").style.display = "block";
+
+  document.getElementById("fullReport").innerHTML = `
+    <h3>Full Cost Breakdown</h3>
+    <p>Foundation: ₦${foundation.toLocaleString()}</p>
+    <p>Roofing: ₦${roofing.toLocaleString()}</p>
+    <p>Finishing: ₦${finishing.toLocaleString()}</p>
+    <p><strong>Total: ₦${total.toLocaleString()}</strong></p>
+  `;
+};
+</script>
+
+</body>
+</html>
