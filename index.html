@@ -114,7 +114,7 @@ function calculateCost() {
 
 // Unlock button logic
 document.getElementById("unlockBtn").onclick = function () {
-  fetch("http://localhost:3000/pay", {
+  fetch("https://myhousecost.onrender.com/pay", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
