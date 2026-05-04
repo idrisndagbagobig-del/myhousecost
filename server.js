@@ -16,7 +16,8 @@ app.post("/pay", async (req, res) => {
       "https://api.paystack.co/transaction/initialize",
       {
         email: email,
-        amount: amount * 100
+        amount: amount * 100,
+callback_url: "https://myhousecost.netlify.app/success.html"
       },
       {
         headers: {

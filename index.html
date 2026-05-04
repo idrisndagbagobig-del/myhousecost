@@ -78,9 +78,9 @@
   <div id="fullReport" style="display:none; margin-top:20px; text-align:left;"></div>
 </div>
 
-<p>✔ Based on real Nigerian construction market data</p>
-<p>✔ Updated material prices</p>
-<p>✔ Trusted by builders & homeowners</p>
+<p>🏗️ Based on real Nigerian construction market data</p>
+<p>₦ Updated material prices</p>
+<p>🏚️ Trusted by builders & homeowners</p>
 
 <!-- Load your data -->
 <script src="data.js"></script>
@@ -95,6 +95,7 @@ function calculateCost() {
   if (!size || size <= 0) {
     alert("Please enter a valid size");
     return;
+    checkPaymentUnlock();
   }
 
   // Check data exists
@@ -164,10 +165,13 @@ document.getElementById("unlockBtn").onclick = function () {
   });
 };
 // Auto unlock after payment
-if (localStorage.getItem("paid") === "true") {
-  document.getElementById("fullReport").style.display = "block";
-  document.getElementById("unlockBtn").style.display = "none";
+function checkPaymentUnlock() {
+  if (localStorage.getItem("paid") === "true") {
+    document.getElementById("fullReport").style.display = "block";
+    document.getElementById("unlockBtn").style.display = "none";
+  }
 }
+window.onload = checkPaymentUnlock;
 </script>
 
 </body>
