@@ -163,6 +163,11 @@ document.getElementById("unlockBtn").onclick = function () {
     alert("Payment failed: " + err.message);
   });
 };
+// Auto unlock after payment
+if (localStorage.getItem("paid") === "true") {
+  document.getElementById("fullReport").style.display = "block";
+  document.getElementById("unlockBtn").style.display = "none";
+}
 </script>
 
 </body>

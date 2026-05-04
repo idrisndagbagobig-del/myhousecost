@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Successful</title>
+</head>
+<body style="text-align:center; font-family: Arial; padding:50px;">
+  <h1>Payment Successful ✅</h1>
+  <p>Your full report is now unlocked.</p>
+
+  <script>
+    // Save unlock status
+    localStorage.setItem("paid", "true");
+
+    // Redirect back to main app
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 2000);
+  </script>
+</body>
+</html>
