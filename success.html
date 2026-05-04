@@ -8,13 +8,14 @@
   <p>Your full report is now unlocked.</p>
 
   <script>
-    // Save unlock status
-    localStorage.setItem("paid", "true");
+  // Mark payment as completed
+  localStorage.setItem("paymentCompleted", "true");
 
-    // Redirect back to main app
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 2000);
+  // Redirect back to homepage after 2 seconds (optional delay)
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 2000);
+</script>
   </script>
 </body>
 </html>
