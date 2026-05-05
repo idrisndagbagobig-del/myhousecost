@@ -76,6 +76,9 @@
   </button>
 
   <div id="fullReport" style="display:none; margin-top:20px; text-align:left;"></div>
+  <button id="downloadBtn" style="display:none; margin-top:10px;">
+  Download Full Report (PDF)
+</button>
 </div>
 
 <p>🏗️ Based on real Nigerian construction market data</p>
@@ -85,7 +88,24 @@
 <!-- Load your data -->
 <script src="data.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
+  document.getElementById("downloadBtn").onclick = function () {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const report = document.getElementById("fullReport").innerText;
+
+  doc.setFontSize(14);
+  doc.text("MyHouseCost Report", 10, 10);
+
+  doc.setFontSize(10);
+  doc.text(report, 10, 20);
+
+  doc.save("building-cost-report.pdf");
+};
+
 function calculateCost() {
   const size = parseFloat(document.getElementById("size").value);
   const type = document.getElementById("type").value;
@@ -172,6 +192,7 @@ function checkPaymentUnlock() {
     // Only show report if it exists
     if (document.getElementById("fullReport").innerHTML !== "") {
       document.getElementById("fullReport").style.display = "block";
+      document.getElementById("downloadBtn").style.display = "block";
     }
   }
 }
