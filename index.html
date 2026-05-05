@@ -86,7 +86,6 @@
 <script src="data.js"></script>
 
 <script>
-  localStorage.removeItem("paid");
 function calculateCost() {
   const size = parseFloat(document.getElementById("size").value);
   const type = document.getElementById("type").value;
@@ -167,12 +166,13 @@ document.getElementById("unlockBtn").onclick = function () {
 };
 // Auto unlock after payment
 function checkPaymentUnlock() {
- if (localStorage.getItem("paid") === "true") {
-  document.getElementById("unlockBtn").style.display = "none";
+  if (localStorage.getItem("paid") === "true") {
+    document.getElementById("unlockBtn").style.display = "none";
 
-  // Only show report if it exists
-  if (document.getElementById("fullReport").innerHTML !== "") {
-    document.getElementById("fullReport").style.display = "block";
+    // Only show report if it exists
+    if (document.getElementById("fullReport").innerHTML !== "") {
+      document.getElementById("fullReport").style.display = "block";
+    }
   }
 }
 window.onload = checkPaymentUnlock;
