@@ -86,6 +86,7 @@
 <script src="data.js"></script>
 
 <script>
+  localStorage.removeItem("paid");
 function calculateCost() {
   const size = parseFloat(document.getElementById("size").value);
   const type = document.getElementById("type").value;
@@ -95,11 +96,6 @@ function calculateCost() {
   if (!size || size <= 0) {
     alert("Please enter a valid size");
     return;
-    document.getElementById("unlockBtn").style.display = "block";
-document.getElementById("fullReport").style.display = "none";
-
-// 🔥 ADD THIS LINE
-checkPaymentUnlock();
   }
 
   // Check data exists
@@ -139,6 +135,7 @@ checkPaymentUnlock();
 
   document.getElementById("unlockBtn").style.display = "block";
   document.getElementById("fullReport").style.display = "none";
+  checkPaymentUnlock();
 }
 
 
@@ -170,9 +167,12 @@ document.getElementById("unlockBtn").onclick = function () {
 };
 // Auto unlock after payment
 function checkPaymentUnlock() {
-  if (localStorage.getItem("paid") === "true") {
+ if (localStorage.getItem("paid") === "true") {
+  document.getElementById("unlockBtn").style.display = "none";
+
+  // Only show report if it exists
+  if (document.getElementById("fullReport").innerHTML !== "") {
     document.getElementById("fullReport").style.display = "block";
-    document.getElementById("unlockBtn").style.display = "none";
   }
 }
 window.onload = checkPaymentUnlock;
