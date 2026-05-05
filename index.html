@@ -95,7 +95,11 @@ function calculateCost() {
   if (!size || size <= 0) {
     alert("Please enter a valid size");
     return;
-    checkPaymentUnlock();
+    document.getElementById("unlockBtn").style.display = "block";
+document.getElementById("fullReport").style.display = "none";
+
+// 🔥 ADD THIS LINE
+checkPaymentUnlock();
   }
 
   // Check data exists
